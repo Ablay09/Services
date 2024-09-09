@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 class MyJobService : JobService() {
 
     companion object {
+        const val JOB_ID = 111
         private const val TAG = "SERVICE_TAG"
     }
 
@@ -47,6 +48,6 @@ class MyJobService : JobService() {
     }
 
     private fun log(message: String) {
-        Log.d(TAG, "MyService: $message ")
+        Log.d(TAG, "MyJobService: $message ")
     }
 }
