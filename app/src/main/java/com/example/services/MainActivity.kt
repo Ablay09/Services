@@ -2,7 +2,9 @@ package com.example.services
 
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
+import android.app.job.JobWorkItem
 import android.content.ComponentName
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +17,8 @@ class MainActivity : AppCompatActivity() {
 
 	companion object {
 	}
+
+	private var page: Int = 0
 
 	private val binding by lazy {
 		ActivityMainBinding.inflate(layoutInflater)
@@ -51,11 +55,13 @@ class MainActivity : AppCompatActivity() {
 			val jobInfo = JobInfo.Builder(MyJobService.JOB_ID, componentName)
 				.setRequiresCharging(true)
 				.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
-				.setPersisted(true)
 				.build()
 
 			val jobScheduler = getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-			jobScheduler.schedule(jobInfo)
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				val intent = MyJobService.newIntent(page++)
+				jobScheduler.enqueue(jobInfo, JobWorkItem(intent))
+			}
 		}
 	}
 }
